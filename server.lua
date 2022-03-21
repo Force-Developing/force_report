@@ -3,74 +3,74 @@ ESX = nil
 TriggerEvent(Config.ESX, function(obj) ESX = obj end)
 
 Citizen.CreateThread(function()
-		RegisterCommand('klar', function(source, args)
-			local template = '<div style="padding: 0.5vw; margin: 0.5vw; background: linear-gradient(90deg, rgba(2,0,36,0.7) 0%, rgba(0,255,38,0.7) 0%, rgba(18,77,21,0.7) 100%); border-radius: 3px;"><i class="fas fa-exclamation-circle"></i> {0}:<br> {1}</div>'
-			local message = "Du har inte tillåtelse att göra detta!"
-			local grupos = getIdentity(source)
+	RegisterCommand('klar', function(source, args)
+		local template = '<div style="padding: 0.5vw; margin: 0.5vw; background: linear-gradient(90deg, rgba(2,0,36,0.7) 0%, rgba(0,255,38,0.7) 0%, rgba(18,77,21,0.7) 100%); border-radius: 3px;"><i class="fas fa-exclamation-circle"></i> {0}:<br> {1}</div>'
+		local message = "Du har inte tillåtelse att göra detta!"
+		local grupos = getIdentity(source)
+
+		local Players = ESX.GetPlayers()
+
+		for i = 1, #Players do
+			local xPlayer = ESX.GetPlayerFromId(Players[i])
+			local rank = xPlayer.getGroup()
+			if grupos.group ~= 'user' then
+				if (rank == "admin" or rank == "mod" or rank == "superadmin" and xPlayer.source ~= source) or xPlayer.source == source then
+					SendDiscordMessage('**' .. GetPlayerName(source) .. ' ' .. '(' .. source .. ')' .. '**' .. ' *' .. 'har gjort klart ett ärrende!' .. '*', 'ID: ' ..table.concat(args, " "), 65280)
+					TriggerClientEvent('esx-qalle-chat:sendMessage', xPlayer.source, xPlayer.source, "KLAR " .. GetPlayerName(source) .." ("..source..")", "Klar med ärendet hos id: " .. table.concat(args, " ") .. "!", template)
+				end
+			else
+				TriggerClientEvent('esx-qalle-chat:sendMessage', source, source, "KLAR", message, template)
+			end
+		end
+	end)
+	
+	RegisterCommand('svara', function(source, color, msg)
+	
+		local template = '<div style="padding: 0.5vw; margin: 0.5vw; background: linear-gradient(90deg, rgba(2,0,36,0.7) 0%, rgba(255,158,0,0.7) 0%, rgba(61,27,27,0.7) 100%); border-radius: 3px;"><i class="fas fa-exclamation-circle"></i> {0}:<br> {1}</div>'
+	
+		local message = "Du har inte tillåtelse att göra detta!"
+	
+		cm = stringsplit(msg, " ")
+		local tPID = tonumber(cm[2])
+		local names2 = GetPlayerName(tPID)
+		local names3 = GetPlayerName(source)
+		local textmsg = ""
+		for i=1, #cm do
+			if i ~= 1 and i ~=2 then
+				textmsg = (textmsg .. " " .. tostring(cm[i]))
+			end
+		end
+		TriggerClientEvent('esx-qalle-chat:sendMessage', source, source, "SVAR", " Svar skickat till:^0 " .. names2 .."  ".."^0  ID: " .. tPID, template)
+		TriggerClientEvent('esx-qalle-chat:sendMessage', tPID, tPID, "SVAR", "  Staff: " .. names2 .. " " .. "(" .. tPID .. ")" ..  "^0: " .. textmsg, template)
+	end)
+	
+	RegisterCommand('report', function(source, args, user)
+		
+		local template = '<div style="padding: 0.5vw; margin: 0.5vw; background: linear-gradient(90deg, rgba(2,0,36,0.7) 0%, rgba(255,0,0,0.7) 0%, rgba(61,27,27,0.7) 100%); border-radius: 3px;"><i class="fas fa-exclamation-circle"></i> {0}:<br> {1}</div>'
+	
+		local message = "Meddelande: " ..table.concat(args, " ")
+	
+		if not hasCooldown then
 
 			local Players = ESX.GetPlayers()
 
 			for i = 1, #Players do
 				local xPlayer = ESX.GetPlayerFromId(Players[i])
 				local rank = xPlayer.getGroup()
-				if grupos.group ~= 'user' then
-					if (rank == "admin" or rank == "mod" or rank == "superadmin" and xPlayer.source ~= source) or xPlayer.source == source then
-						SendDiscordMessage('**' .. GetPlayerName(source) .. ' ' .. '(' .. source .. ')' .. '**' .. ' *' .. 'har gjort klart ett ärrende!' .. '*', 'ID: ' ..table.concat(args, " "), 65280)
-						TriggerClientEvent('esx-qalle-chat:sendMessage', xPlayer.source, xPlayer.source, "KLAR " .. GetPlayerName(source) .." ("..source..")", "Klar med ärendet hos id: " .. table.concat(args, " ") .. "!", template)
-					end
-				else
-					TriggerClientEvent('esx-qalle-chat:sendMessage', source, source, "KLAR", message, template)
+
+				if (rank == "admin" or rank == "mod" or rank == "superadmin" and xPlayer.source ~= source) or xPlayer.source == source then
+					TriggerClientEvent('esx-qalle-chat:sendMessage', xPlayer.source, xPlayer.source, "REPORT: " .. GetPlayerName(source) .." ("..source..")", message, template)
 				end
 			end
-		end)
-		
-		RegisterCommand('svara', function(source, color, msg)
-		
+			hasCooldown = true
+			SendDiscordMessage('**' .. GetPlayerName(source) .. ' ' .. '(' .. source .. ')' .. '**' .. ' *' .. 'har skickat en report!' .. '*', message, 16711680)
+		else
 			local template = '<div style="padding: 0.5vw; margin: 0.5vw; background: linear-gradient(90deg, rgba(2,0,36,0.7) 0%, rgba(255,158,0,0.7) 0%, rgba(61,27,27,0.7) 100%); border-radius: 3px;"><i class="fas fa-exclamation-circle"></i> {0}:<br> {1}</div>'
-		
-			local message = "Du har inte tillåtelse att göra detta!"
-		
-			cm = stringsplit(msg, " ")
-			local tPID = tonumber(cm[2])
-			local names2 = GetPlayerName(tPID)
-			local names3 = GetPlayerName(source)
-			local textmsg = ""
-			for i=1, #cm do
-				if i ~= 1 and i ~=2 then
-					textmsg = (textmsg .. " " .. tostring(cm[i]))
-				end
-			end
-			TriggerClientEvent('esx-qalle-chat:sendMessage', source, source, "SVAR", " Svar skickat till:^0 " .. names2 .."  ".."^0  ID: " .. tPID, template)
-			TriggerClientEvent('esx-qalle-chat:sendMessage', tPID, tPID, "SVAR", "  Staff: " .. names2 .. " " .. "(" .. tPID .. ")" ..  "^0: " .. textmsg, template)
-		end)
-		
-		RegisterCommand('report', function(source, args, user)
-			
-			local template = '<div style="padding: 0.5vw; margin: 0.5vw; background: linear-gradient(90deg, rgba(2,0,36,0.7) 0%, rgba(255,0,0,0.7) 0%, rgba(61,27,27,0.7) 100%); border-radius: 3px;"><i class="fas fa-exclamation-circle"></i> {0}:<br> {1}</div>'
-		
-			local message = "Meddelande: " ..table.concat(args, " ")
-		
-			if not hasCooldown then
-
-				local Players = ESX.GetPlayers()
-
-				for i = 1, #Players do
-					local xPlayer = ESX.GetPlayerFromId(Players[i])
-					local rank = xPlayer.getGroup()
-
-					if (rank == "admin" or rank == "mod" or rank == "superadmin" and xPlayer.source ~= source) or xPlayer.source == source then
-						TriggerClientEvent('esx-qalle-chat:sendMessage', xPlayer.source, xPlayer.source, "REPORT: " .. GetPlayerName(source) .." ("..source..")", message, template)
-					end
-				end
-				hasCooldown = true
-				SendDiscordMessage('**' .. GetPlayerName(source) .. ' ' .. '(' .. source .. ')' .. '**' .. ' *' .. 'har skickat en report!' .. '*', message, 16711680)
-			else
-				local template = '<div style="padding: 0.5vw; margin: 0.5vw; background: linear-gradient(90deg, rgba(2,0,36,0.7) 0%, rgba(255,158,0,0.7) 0%, rgba(61,27,27,0.7) 100%); border-radius: 3px;"><i class="fas fa-exclamation-circle"></i> {0}:<br> {1}</div>'
-				local message = "Du måste vänta 10sek innan du kan skriva i report igen!"
-		
-				TriggerClientEvent('esx-qalle-chat:sendMessage', source, source, "Cooldown", message, template)
-			end
-		end, false)
+			local message = "Du måste vänta 10sek innan du kan skriva i report igen!"
+	
+			TriggerClientEvent('esx-qalle-chat:sendMessage', source, source, "Cooldown", message, template)
+		end
+	end, false)
 end)
 
 Citizen.CreateThread(function()
