@@ -3,8 +3,6 @@ ESX = nil
 TriggerEvent(Config.ESX, function(obj) ESX = obj end)
 
 Citizen.CreateThread(function()
-	while true do
-		Wait(5)
 		RegisterCommand('klar', function(source, args)
 			local template = '<div style="padding: 0.5vw; margin: 0.5vw; background: linear-gradient(90deg, rgba(2,0,36,0.7) 0%, rgba(0,255,38,0.7) 0%, rgba(18,77,21,0.7) 100%); border-radius: 3px;"><i class="fas fa-exclamation-circle"></i> {0}:<br> {1}</div>'
 			local message = "Du har inte tillåtelse att göra detta!"
@@ -73,7 +71,6 @@ Citizen.CreateThread(function()
 				TriggerClientEvent('esx-qalle-chat:sendMessage', source, source, "Cooldown", message, template)
 			end
 		end, false)
-	end
 end)
 
 Citizen.CreateThread(function()
