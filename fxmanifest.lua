@@ -20,6 +20,11 @@ shared_scripts {
 server_scripts {
     'server/custom/frameworks/*.lua',
     'server/discord.lua',
+    'server/main.lua',
+}
+
+client_scripts {
+    'client/main.lua',
 }
 
 files {
