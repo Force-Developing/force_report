@@ -1,4 +1,6 @@
 Config = {
-    discordWebhook = "https://discordapp.com/api/webhooks/953263111983480882/EOp_zXZ8OFlTspiw3HbpeqAPZ_9IeWsRVeu9RGOvUNDvYuVuZmzB4EguoU9LnYZ1gPBK",
+    -- The Discord webhook is read from the server convar "force_report:webhook" (set it in server.cfg with
+    -- `set`, never `setr`). This file is sent to every client, so never put a webhook URL here.
+    discordWebhook = "",
     ESX = 'esx:getSharedObject'
 }

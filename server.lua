@@ -151,5 +151,7 @@ function SendDiscordMessage(textdiscord, reportMessage, color)
         }
 	}
 
-	PerformHttpRequest(Config.discordWebhook, function(err, text, headers) end, "POST", json.encode({username = "force_report", embeds = embeds}), { ["Content-Type"] = "application/json" })
+	local webhook = GetConvar('force_report:webhook', '')
+	if webhook == '' then return end
+	PerformHttpRequest(webhook, function(err, text, headers) end, "POST", json.encode({username = "force_report", embeds = embeds}), { ["Content-Type"] = "application/json" })
 end
