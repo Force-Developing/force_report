@@ -18,6 +18,7 @@ shared_scripts {
 }
 
 server_scripts {
+    'version.lua',
     'server/custom/frameworks/*.lua',
     'server/discord.lua',
     'server/main.lua',
