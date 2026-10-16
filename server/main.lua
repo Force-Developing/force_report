@@ -190,11 +190,13 @@ end
 -- Commands
 -------------------------------------------------------------------------------------------------------------------
 
-local function onReport(source, args)
+local function onReport(source, args, raw)
   if source == 0 then return send(0, "error", locale("report_title"), locale("console_cannot_report")) end
   local title = locale("report_title")
   local cfg = Config.Report
-  local message = SanitizeText(table.concat(args, " "), cfg.maxLength)
+  -- from the raw line: cfx strips double quotes from args
+  local message = SanitizeText(type(raw) == "string" and raw:match("^/?%S+%s*(.*)$") or table.concat(args, " "),
+    cfg.maxLength)
   if utf8.len(message) < (tonumber(cfg.minLength) or 1) then
     return send(source, "error", title, locale("report_usage", GetCommandLabel("report"), cfg.minLength))
   end
@@ -224,10 +226,11 @@ local function onReport(source, args)
   TriggerEvent("force_report:reportCreated", copyReport(report))
 end
 
-local function onReply(source, args)
+local function onReply(source, args, raw)
   local title = locale("staff_title")
   if not isStaff(source) then return send(source, "error", title, locale("not_staff")) end
-  local message = SanitizeText(table.concat(args, " ", 2), Config.Reply.maxLength)
+  local message = SanitizeText(type(raw) == "string" and raw:match("^/?%S+%s+%S+%s*(.*)$") or table.concat(args, " ", 2),
+    Config.Reply.maxLength)
   if not args[1] or message == "" then
     return send(source, "error", title, locale("reply_usage", GetCommandLabel("reply")))
   end
@@ -303,8 +306,8 @@ local function registerCommands()
         Log("warn", ("/%s is also registered by %s; the resource that starts last owns it. Rename it in " ..
           "Config.Commands.%s."):format(name, others[name], kind))
       end
-      RegisterCommand(name, function(source, args)
-        local ok, err = pcall(handler, tonumber(source) or 0, type(args) == "table" and args or {})
+      RegisterCommand(name, function(source, args, raw)
+        local ok, err = pcall(handler, tonumber(source) or 0, type(args) == "table" and args or {}, raw)
         if not ok then Debug("error", "/%s failed: %s", name, tostring(err)) end
       end, false)
     end
