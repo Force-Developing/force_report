@@ -44,6 +44,15 @@ Version 1 shipped a Discord webhook URL in `config.lua`. It is still in this rep
 
 https://docs.forcedevelopments.com/free-resources/force_report/introduction
 
+## More from Force Developments
+
+Paid resources that pair well with this one. Escrow-protected, documented, with free updates:
+
+- **[Force Characters](https://forcedevelopments.com/scripts/force-characters?utm_source=github&utm_medium=readme&utm_campaign=force_report)**: multicharacter selection and management.
+- **[Force Appearance](https://forcedevelopments.com/scripts/force-appearance?utm_source=github&utm_medium=readme&utm_campaign=force_report)**: appearance system with clothing, barber and tattoo shops.
+
+Want all of them? [All Resources](https://forcedevelopments.com/scripts/all-resources-1-month?utm_source=github&utm_medium=readme&utm_campaign=force_report) is a monthly subscription that includes every paid resource. Browse the full catalogue at [forcedevelopments.com](https://forcedevelopments.com/scripts?utm_source=github&utm_medium=readme&utm_campaign=force_report).
+
 ## License
 
 Apache 2.0, see [LICENSE](LICENSE).
